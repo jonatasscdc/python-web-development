@@ -22,4 +22,14 @@ def register():
     return redirect(url_for('login'))
 return render_template('register.html')
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+  if request.method == 'POST':
+    user = User.query.filter_by(name=request.form['name']).first()
+    if user and check_password_hash(user.password, request.form['password']):
+      return redirect(url_for('home'))
+    return render_template('login.html')
 
+if __name__ == '__main__':
+  db.create_all()
+  app.run(debug=True)
